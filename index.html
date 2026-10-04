@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#111316" />
+
+    <title>星爻间 · 星在天上，爻在地上，我们在人间</title>
+    <meta
+      name="description"
+      content="星爻间 · 东西方双体系解读。塔罗、星盘、道教命理、仪式与草药。不承诺结果，只给视角与时间窗。"
+    />
+
+    <meta property="og:title" content="星爻间 · 东西方双体系解读" />
+    <meta property="og:description" content="星在天上，爻在地上，我们在人间。" />
+    <meta property="og:type" content="website" />
+
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+
+    <!--
+      GitHub Pages SPA 深链兜底
+      ─────────────────────────────
+      Pages 是纯静态托管，没有 rewrite 规则：用户直接访问
+      /AboveBelowBetween/systems 会落到 404.html。
+
+      404.html 由本项目复制 index.html 生成（见 package.json 的 build 脚本），
+      因此这段脚本在两个页面里都会执行：
+        · index.html：pathname 已是 /AboveBelowBetween/，rest 为空 → 直接跳过
+        · 404.html  ：pathname 是 /AboveBelowBetween/systems → 转成 ?redirect= 送回首页
+
+      必须在 <head> 内同步执行 —— 放到 body 末尾会让用户先看到一下 404 画面。
+      读取该参数的逻辑在 src/main.tsx（同样是 render 之前）。
+    -->
+    <script>
+      ;(function () {
+        var BASE = '/AboveBelowBetween'
+        var pathname = window.location.pathname
+        var rest = pathname.indexOf(BASE + '/') === 0 ? pathname.slice(BASE.length + 1) : ''
+
+        if (rest && rest !== 'index.html' && rest !== '404.html') {
+          window.location.replace(BASE + '/?redirect=' + encodeURIComponent(rest + window.location.search))
+        }
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

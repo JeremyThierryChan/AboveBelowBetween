@@ -1,0 +1,264 @@
+@import 'tailwindcss';
+
+/* ============================================================
+   星爻间 · 设计令牌
+   两个主题：domestic（东方留白） / overseas（暗紫星图）
+   WebGL/Canvas 侧的同名色板见 src/lib/brand.ts —— 改色请两边同步
+   ============================================================ */
+
+@theme {
+  --font-sans:
+    'PingFang SC', 'Hiragino Sans GB', 'Heiti SC', 'Microsoft YaHei', system-ui, sans-serif;
+  --font-serif: 'Songti SC', 'STSong', 'Source Han Serif SC', 'Noto Serif SC', serif;
+  --font-latin: 'Inter', 'Playfair Display', ui-sans-serif, system-ui, sans-serif;
+
+  /* 品牌常量（两主题共用） */
+  --color-gold: #a8863f;
+  --color-gold-light: #c9a84c;
+  --color-plum: #5b3f7d;
+  --color-plum-deep: #6b4a8f;
+  --color-ink-pure: #111316;
+
+  /* 动效时序 */
+  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-sigil: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* ---------- 主题一：domestic 东方留白 ---------- */
+:root,
+[data-theme='domestic'] {
+  --bg: #f7f5f2;
+  --bg-raised: #ffffff;
+  --bg-sunken: #efece7;
+  --bg-veil: rgba(247, 245, 242, 0.72);
+
+  --fg: #1e2126;
+  --fg-muted: #5a5f66;
+  --fg-subtle: #8b9098;
+  --fg-inverse: #f7f5f2;
+
+  --accent: #6b4a8f;
+  --accent-soft: rgba(107, 74, 143, 0.08);
+  --accent-line: rgba(107, 74, 143, 0.22);
+  --gold-accent: #a8863f;
+
+  --border: #e2ded7;
+  --border-strong: #cfc9c0;
+
+  --shadow-sm: 0 1px 2px rgba(30, 33, 38, 0.05);
+  --shadow-md: 0 8px 24px -8px rgba(30, 33, 38, 0.12);
+  --shadow-lg: 0 24px 64px -16px rgba(30, 33, 38, 0.18);
+
+  --sigil-stroke: #6b4a8f;
+  --sigil-fill: rgba(107, 74, 143, 0.1);
+
+  color-scheme: light;
+}
+
+/* ---------- 主题二：overseas 暗紫星图 ---------- */
+[data-theme='overseas'] {
+  --bg: #111316;
+  --bg-raised: #191c21;
+  --bg-sunken: #0b0d10;
+  --bg-veil: rgba(17, 19, 22, 0.72);
+
+  --fg: #f4efe6;
+  --fg-muted: #a9a49b;
+  --fg-subtle: #6f6b65;
+  --fg-inverse: #111316;
+
+  --accent: #8b6bb1;
+  --accent-soft: rgba(139, 107, 177, 0.14);
+  --accent-line: rgba(139, 107, 177, 0.3);
+  --gold-accent: #c9a84c;
+
+  --border: #262a30;
+  --border-strong: #363b43;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px -8px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 24px 64px -16px rgba(0, 0, 0, 0.75);
+
+  --sigil-stroke: #c9a84c;
+  --sigil-fill: rgba(201, 168, 76, 0.12);
+
+  color-scheme: dark;
+}
+
+/* ---------- 基础层 ---------- */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--fg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  button,
+  [role='button'] {
+    cursor: pointer;
+  }
+
+  /* 尊重系统的减弱动效偏好 */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ---------- 组件层 ---------- */
+@layer components {
+  /* 宋体标题：品牌质感的核心 */
+  .font-display {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  /* 品牌渐变文字 */
+  .text-brand-gradient {
+    background: linear-gradient(
+      100deg,
+      var(--accent) 0%,
+      var(--gold-accent) 55%,
+      var(--accent) 100%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  /* 细金分隔线（品牌固定元素） */
+  .rule-gold {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--gold-accent) 20%,
+      var(--gold-accent) 80%,
+      transparent
+    );
+    opacity: 0.55;
+  }
+
+  /* 宣纸/深空底纹 */
+  .surface-veil {
+    background-color: var(--bg-veil);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+  }
+
+  .card-raised {
+    background-color: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* 首字下沉，用于品牌释义段落 */
+  .drop-cap::first-letter {
+    float: left;
+    font-family: var(--font-serif);
+    font-size: 3.2em;
+    line-height: 0.86;
+    padding-right: 0.12em;
+    color: var(--accent);
+  }
+}
+
+/* ---------- 工具层 ---------- */
+@utility stagger-* {
+  --stagger-index: --value(integer);
+  animation-delay: calc(var(--stagger-index) * 60ms);
+}
+
+/* ---------- 品牌符号入场动画：双圆相合 ---------- */
+@keyframes sigil-form {
+  0% {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes sigil-form-upper {
+  0% {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes sigil-form-lower {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 未使用 @layer，确保 motion-safe: 前缀能被 Tailwind 正确生成 */
+.motion-safe\:sigil-form,
+.motion-safe\:sigil-form-upper,
+.motion-safe\:sigil-form-lower {
+  transform-box: fill-box;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .motion-safe\:sigil-form {
+    animation: sigil-form 1s var(--ease-brand) both;
+  }
+  .motion-safe\:sigil-form-upper {
+    animation: sigil-form-upper 0.9s var(--ease-brand) both;
+  }
+  .motion-safe\:sigil-form-lower {
+    animation: sigil-form-lower 0.9s var(--ease-brand) 0.12s both;
+  }
+}
+
+/* 页面入场时 [data-anim] 的初始态由 GSAP 接管；
+   若 JS 未执行（例如爬虫），保证内容依然可见 */
+.no-js [data-anim] {
+  opacity: 1;
+}
