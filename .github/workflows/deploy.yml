@@ -51,6 +51,11 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
+        with:
+          # 首次部署时自动启用 Pages（Source = GitHub Actions），
+          # 否则该步骤会因「Pages 未启用」直接失败。
+          # 需要工作流具备 pages: write 权限（见文件顶部的 permissions）。
+          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
