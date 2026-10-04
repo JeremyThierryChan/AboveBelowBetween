@@ -194,7 +194,22 @@ pnpm dev        # http://127.0.0.1:5175
 
 **站点地址**：https://jeremythierrychan.github.io/AboveBelowBetween/
 
-首次部署需要在仓库 Settings → Pages → Source 选择 **GitHub Actions**。
+### ⚠️ 首次部署前必须先手动启用 Pages（一次性）
+
+```
+仓库 Settings → Pages → Build and deployment → Source → 选「GitHub Actions」
+```
+
+**为什么不能自动完成**：创建 Pages 站点需要仓库管理员权限，而 Actions 使用的
+`GITHUB_TOKEN` 没有这个权限。实测以下两种自动方式均被拒：
+
+- `actions/configure-pages` 的 `enablement: true`
+- 直接调用 `POST /repos/{owner}/{repo}/pages` REST API
+
+启用一次之后，后续每次推送到 `main` 都会自动构建部署，无需再操作。
+
+若首次推送时 Pages 尚未启用，工作流会在 `Setup Pages` 步骤失败。
+启用后重新运行一次该工作流即可（Actions → 选择失败的运行 → Re-run all jobs）。
 
 #### 子路径部署的两个关键点
 
