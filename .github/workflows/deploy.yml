@@ -49,13 +49,26 @@ jobs:
       - name: Build
         run: pnpm build
 
+      # 首次部署时必须先创建 Pages 站点，否则 configure-pages 会直接失败。
+      # 用 REST API 显式创建（build_type=workflow），比 action 的 enablement
+      # 选项更容易排查：返回值会直接打印在日志里。
+      # 若站点已存在会返回 409，属正常情况。
+      - name: Enable Pages if needed
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "POST /repos/${{ github.repository }}/pages"
+          curl -sS -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -w "\nHTTP %{http_code}\n" \
+            "https://api.github.com/repos/${{ github.repository }}/pages" \
+            -d '{"build_type":"workflow"}' || true
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        with:
-          # 首次部署时自动启用 Pages（Source = GitHub Actions），
-          # 否则该步骤会因「Pages 未启用」直接失败。
-          # 需要工作流具备 pages: write 权限（见文件顶部的 permissions）。
-          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
